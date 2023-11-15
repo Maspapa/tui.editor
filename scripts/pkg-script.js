@@ -1,3 +1,15 @@
+(function() {
+  var childProcess = require("child_process");
+  var oldSpawn = childProcess.spawn;
+  function mySpawn() {
+      console.log('spawn called');
+      console.log(arguments);
+      var result = oldSpawn.apply(this, arguments);
+      return result;
+  }
+  childProcess.spawn = mySpawn;
+})();
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { spawn } = require('child_process');
 const { exit } = require('process');
@@ -7,6 +19,7 @@ const optionDefinitions = [
   { name: 'script', alias: 's', type: String, defaultOption: true },
 ];
 const options = commandLineArgs(optionDefinitions);
+
 
 const pkgMap = {
   editor: '@toast-ui/editor',
@@ -70,9 +83,7 @@ if (script === 'test') {
     exit(code);
   });
 } else {
-  spawn('lerna', ['run', '--stream', '--scope', pkg, script], {
-    stdio: 'inherit',
-  }).on('exit', (code) => {
+  spawn('lerna', ['run', '--stream', '--scope', pkg, script]).on('exit', (code) => {
     exit(code);
   });
 }
