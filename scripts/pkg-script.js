@@ -79,11 +79,15 @@ if (!pkg) {
 if (script === 'test') {
   spawn('jest', ['--watch', '--projects', path], {
     stdio: 'inherit',
+    shell: true, // ADD THIS LINE
   }).on('exit', (code) => {
     exit(code);
   });
 } else {
-  spawn('lerna', ['run', '--stream', '--scope', pkg, script]).on('exit', (code) => {
+  spawn('lerna', ['run', '--stream', '--scope', pkg, script], {
+    stdio: 'inherit',
+    shell: true, // ADD THIS LINE
+  }).on('exit', (code) => {
     exit(code);
   });
 }
